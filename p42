@@ -1,0 +1,3 @@
+#cd kernel
+patch -p1 < ../linux-4.2-rc7_bpi.patch
+#patch -R -p1 < ../linux-4.2-rc7_bpi.patch

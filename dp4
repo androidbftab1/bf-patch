@@ -1,0 +1,4 @@
+SRC=linux-4.1.4
+DST=linux-4.1.4.bpi
+PATCH=${DST}.patch
+diff -Naur $SRC $DST > $PATCH
