@@ -1,0 +1,8 @@
+SRC=u-boot-2016.05
+DST=u-boot-2016.05-bpi-20160620
+PATCH=${DST}.patch
+#diff -Naur $SRC $DST > $PATCH
+#cd uboot
+patch -p1 < ../${PATCH}
+#patch -R -p1 < ../${PATCH}
+

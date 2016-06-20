@@ -1,0 +1,1112 @@
+diff -Naur u-boot-2016.05/arch/arm/dts/Makefile u-boot-2016.05-bpi-20160620/arch/arm/dts/Makefile
+--- u-boot-2016.05/arch/arm/dts/Makefile	2016-05-16 22:40:32.000000000 +0800
++++ u-boot-2016.05-bpi-20160620/arch/arm/dts/Makefile	2016-06-20 11:45:09.597197113 +0800
+@@ -176,6 +176,7 @@
+ dtb-$(CONFIG_MACH_SUN7I) += \
+ 	sun7i-a20-ainol-aw1.dtb \
+ 	sun7i-a20-bananapi.dtb \
++	sun7i-a20-sinovoip-bpi-m1-plus.dtb \
+ 	sun7i-a20-bananapro.dtb \
+ 	sun7i-a20-cubieboard2.dtb \
+ 	sun7i-a20-cubietruck.dtb \
+@@ -213,6 +214,7 @@
+ 	sun8i-a83t-cubietruck-plus.dtb \
+ 	sun8i-a83t-sinovoip-bpi-m3.dtb
+ dtb-$(CONFIG_MACH_SUN8I_H3) += \
++	sun8i-h3-sinovoip-bpi-m2-plus.dtb \
+ 	sun8i-h3-orangepi-2.dtb \
+ 	sun8i-h3-orangepi-one.dtb \
+ 	sun8i-h3-orangepi-pc.dtb \
+diff -Naur u-boot-2016.05/arch/arm/dts/sun6i-a31s-sinovoip-bpi-m2.dts u-boot-2016.05-bpi-20160620/arch/arm/dts/sun6i-a31s-sinovoip-bpi-m2.dts
+--- u-boot-2016.05/arch/arm/dts/sun6i-a31s-sinovoip-bpi-m2.dts	2016-05-16 22:40:32.000000000 +0800
++++ u-boot-2016.05-bpi-20160620/arch/arm/dts/sun6i-a31s-sinovoip-bpi-m2.dts	2016-06-02 09:45:50.000000000 +0800
+@@ -46,7 +46,7 @@
+ #include <dt-bindings/gpio/gpio.h>
+ 
+ / {
+-	model = "Sinovoip BPI-M2";
++	model = "Banana Pi BPI-M2";
+ 	compatible = "sinovoip,bpi-m2", "allwinner,sun6i-a31s";
+ 
+ 	aliases {
+diff -Naur u-boot-2016.05/arch/arm/dts/sun7i-a20-bananapi.dts u-boot-2016.05-bpi-20160620/arch/arm/dts/sun7i-a20-bananapi.dts
+--- u-boot-2016.05/arch/arm/dts/sun7i-a20-bananapi.dts	2016-05-16 22:40:32.000000000 +0800
++++ u-boot-2016.05-bpi-20160620/arch/arm/dts/sun7i-a20-bananapi.dts	2016-06-02 09:45:13.000000000 +0800
+@@ -51,8 +51,8 @@
+ #include <dt-bindings/pinctrl/sun4i-a10.h>
+ 
+ / {
+-	model = "LeMaker Banana Pi";
+-	compatible = "lemaker,bananapi", "allwinner,sun7i-a20";
++	model = "Banana Pi BPI-M1";
++	compatible = "sinovoip,bananapi", "allwinner,sun7i-a20";
+ 
+ 	aliases {
+ 		serial0 = &uart0;
+diff -Naur u-boot-2016.05/arch/arm/dts/sun7i-a20-lamobo-r1.dts u-boot-2016.05-bpi-20160620/arch/arm/dts/sun7i-a20-lamobo-r1.dts
+--- u-boot-2016.05/arch/arm/dts/sun7i-a20-lamobo-r1.dts	2016-05-16 22:40:32.000000000 +0800
++++ u-boot-2016.05-bpi-20160620/arch/arm/dts/sun7i-a20-lamobo-r1.dts	2016-06-02 09:52:26.000000000 +0800
+@@ -49,7 +49,7 @@
+ #include <dt-bindings/pinctrl/sun4i-a10.h>
+ 
+ / {
+-	model = "Lamobo R1";
++	model = "Lamobo R1 / Banana Pi BPI-R1";
+ 	compatible = "lamobo,lamobo-r1", "allwinner,sun7i-a20";
+ 
+ 	aliases {
+diff -Naur u-boot-2016.05/arch/arm/dts/sun7i-a20-sinovoip-bpi-m1-plus.dts u-boot-2016.05-bpi-20160620/arch/arm/dts/sun7i-a20-sinovoip-bpi-m1-plus.dts
+--- u-boot-2016.05/arch/arm/dts/sun7i-a20-sinovoip-bpi-m1-plus.dts	1970-01-01 08:00:00.000000000 +0800
++++ u-boot-2016.05-bpi-20160620/arch/arm/dts/sun7i-a20-sinovoip-bpi-m1-plus.dts	2016-06-02 09:46:14.000000000 +0800
+@@ -0,0 +1,269 @@
++/*
++ * Copyright 2015 Hans de Goede <hdegoede@redhat.com>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "sun7i-a20.dtsi"
++#include "sunxi-common-regulators.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++
++/ {
++	model = "Banana Pi BPI-M1+";
++	compatible = "sinovoip,bpi-m1p", "allwinner,sun7i-a20";
++
++	aliases {
++		serial0 = &uart0;
++		serial1 = &uart4;
++		serial2 = &uart7;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&led_pins_bananapi>;
++
++		blue {
++			label = "bananapi:blue:usr";
++			gpios = <&pio 6 2 GPIO_ACTIVE_HIGH>;
++		};
++
++		green {
++			label = "bananapi:green:usr";
++			gpios = <&pio 7 24 GPIO_ACTIVE_HIGH>;
++		};
++	};
++
++	reg_gmac_3v3: gmac-3v3 {
++		compatible = "regulator-fixed";
++		pinctrl-names = "default";
++		pinctrl-0 = <&gmac_power_pin_bananapi>;
++		regulator-name = "gmac-3v3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		startup-delay-us = <100000>;
++		enable-active-high;
++		gpio = <&pio 7 23 GPIO_ACTIVE_HIGH>;
++	};
++
++	reg_vmmc3: vmmc3 {
++		compatible = "regulator-fixed";
++		pinctrl-names = "default";
++		pinctrl-0 = <&vmmc3_pin_bananapi>;
++		regulator-name = "vmmc3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		enable-active-high;
++		gpio = <&pio 7 22 GPIO_ACTIVE_HIGH>;
++	};
++};
++
++&ahci {
++	status = "okay";
++};
++
++&ehci0 {
++	status = "okay";
++};
++
++&ehci1 {
++	status = "okay";
++};
++
++&gmac {
++	pinctrl-names = "default";
++	pinctrl-0 = <&gmac_pins_rgmii_a>;
++	phy = <&phy1>;
++	phy-mode = "rgmii";
++	phy-supply = <&reg_gmac_3v3>;
++	status = "okay";
++
++	phy1: ethernet-phy@1 {
++		reg = <1>;
++	};
++};
++
++&i2c0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c0_pins_a>;
++	status = "okay";
++
++	axp209: pmic@34 {
++		compatible = "x-powers,axp209";
++		reg = <0x34>;
++		interrupt-parent = <&nmi_intc>;
++		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++
++		interrupt-controller;
++		#interrupt-cells = <1>;
++	};
++};
++
++&i2c2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c2_pins_a>;
++	status = "okay";
++};
++
++&ir0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&ir0_rx_pins_a>;
++	status = "okay";
++};
++
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_bananapi>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	cd-gpios = <&pio 7 10 GPIO_ACTIVE_HIGH>; /* PH10 */
++	cd-inverted;
++	status = "okay";
++};
++
++&mmc3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc3_pins_a>;
++	vmmc-supply = <&reg_vmmc3>;
++	bus-width = <4>;
++	non-removable;
++	status = "okay";
++};
++
++&ohci0 {
++	status = "okay";
++};
++
++&ohci1 {
++	status = "okay";
++};
++
++&pio {
++	gmac_power_pin_bananapi: gmac_power_pin@0 {
++		allwinner,pins = "PH23";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++
++	led_pins_bananapi: led_pins@0 {
++		allwinner,pins = "PH24", "PG2";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++
++	mmc0_cd_pin_bananapi: mmc0_cd_pin@0 {
++		allwinner,pins = "PH10";
++		allwinner,function = "gpio_in";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
++	};
++
++	usb1_vbus_pin_bananapi: usb1_vbus_pin@0 {
++		allwinner,pins = "PH0";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++
++	usb2_vbus_pin_bananapi: usb2_vbus_pin@0 {
++		allwinner,pins = "PH1";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++
++	vmmc3_pin_bananapi: vmmc3_pin@0 {
++		allwinner,pins = "PH22";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++};
++
++&reg_usb1_vbus {
++	pinctrl-0 = <&usb1_vbus_pin_bananapi>;
++	gpio = <&pio 7 0 GPIO_ACTIVE_HIGH>; /* PH0 */
++	status = "okay";
++};
++
++&reg_usb2_vbus {
++	pinctrl-0 = <&usb2_vbus_pin_bananapi>;
++	gpio = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
++	status = "okay";
++};
++
++&spi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi0_pins_a>,
++		    <&spi0_cs0_pins_a>,
++		    <&spi0_cs1_pins_a>;
++	status = "okay";
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
++};
++
++&uart4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart4_pins_b>;
++	status = "okay";
++};
++
++&uart7 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart7_pins_a>;
++	status = "okay";
++};
++
++&usbphy {
++	usb1_vbus-supply = <&reg_usb1_vbus>;
++	usb2_vbus-supply = <&reg_usb2_vbus>;
++	status = "okay";
++};
+diff -Naur u-boot-2016.05/arch/arm/dts/sun8i-h3-sinovoip-bpi-m2-plus.dts u-boot-2016.05-bpi-20160620/arch/arm/dts/sun8i-h3-sinovoip-bpi-m2-plus.dts
+--- u-boot-2016.05/arch/arm/dts/sun8i-h3-sinovoip-bpi-m2-plus.dts	1970-01-01 08:00:00.000000000 +0800
++++ u-boot-2016.05-bpi-20160620/arch/arm/dts/sun8i-h3-sinovoip-bpi-m2-plus.dts	2016-06-20 11:55:50.000000000 +0800
+@@ -0,0 +1,175 @@
++/*
++ * Copyright (C) 2015 Chen-Yu Tsai <wens@csie.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "sun8i-h3.dtsi"
++#include "sunxi-common-regulators.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/pinctrl/sun4i-a10.h>
++
++/ {
++	model = "Banana Pi BPI-M2+";
++	compatible = "sinovoip,bpi-m2p", "allwinner,sun8i-h3";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&leds_opc>;
++
++		status_led {
++			label = "status:red:user";
++			gpios = <&pio 0 15 GPIO_ACTIVE_HIGH>;
++		};
++	};
++
++	r_leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&leds_r_opc>;
++
++		tx {
++			label = "pwr:green:user";
++			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++		};
++	};
++
++	r_gpio_keys {
++		compatible = "gpio-keys";
++		input-name = "sw4";
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&sw_r_opc>;
++
++		sw4@0 {
++			label = "sw4";
++			linux,code = <BTN_0>;
++			gpios = <&r_pio 0 3 GPIO_ACTIVE_LOW>;
++		};
++	};
++};
++
++&ehci1 {
++	status = "okay";
++};
++
++&ehci2 {
++	status = "okay";
++};
++
++&ehci3 {
++	status = "okay";
++};
++
++&ir {
++	pinctrl-names = "default";
++	pinctrl-0 = <&ir_pins_a>;
++	status = "okay";
++};
++
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
++	cd-inverted;
++	status = "okay";
++};
++
++&ohci1 {
++	status = "okay";
++};
++
++&ohci2 {
++	status = "okay";
++};
++
++&ohci3 {
++	status = "okay";
++};
++
++&pio {
++	leds_opc: led_pins@0 {
++		allwinner,pins = "PA15";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++};
++
++&r_pio {
++	leds_r_opc: led_pins@0 {
++		allwinner,pins = "PL10";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++
++	sw_r_opc: key_pins@0 {
++		allwinner,pins = "PL03";
++		allwinner,function = "gpio_in";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
++};
++
++&usbphy {
++	/* USB VBUS is always on */
++	status = "okay";
++};
+diff -Naur u-boot-2016.05/arch/arm/include/asm/arch-sunxi/clock_sun6i.h u-boot-2016.05-bpi-20160620/arch/arm/include/asm/arch-sunxi/clock_sun6i.h
+--- u-boot-2016.05/arch/arm/include/asm/arch-sunxi/clock_sun6i.h	2016-05-16 22:40:32.000000000 +0800
++++ u-boot-2016.05-bpi-20160620/arch/arm/include/asm/arch-sunxi/clock_sun6i.h	2016-05-30 11:32:48.000000000 +0800
+@@ -180,6 +180,7 @@
+ #define CCM_PLL1_CTRL_N(n)		((((n) - 1) & 0x1f) << 8)
+ #define CCM_PLL1_CTRL_P(n)		(((n) & 0x3) << 16)
+ #define CCM_PLL1_CTRL_EN		(0x1 << 31)
++#define CCM_PLL1_CTRL_LOCK		(0x1 << 28)
+ 
+ #define CCM_PLL3_CTRL_M_SHIFT		0
+ #define CCM_PLL3_CTRL_M_MASK		(0xf << CCM_PLL3_CTRL_M_SHIFT)
+diff -Naur u-boot-2016.05/arch/arm/mach-sunxi/clock_sun6i.c u-boot-2016.05-bpi-20160620/arch/arm/mach-sunxi/clock_sun6i.c
+--- u-boot-2016.05/arch/arm/mach-sunxi/clock_sun6i.c	2016-05-16 22:40:32.000000000 +0800
++++ u-boot-2016.05-bpi-20160620/arch/arm/mach-sunxi/clock_sun6i.c	2016-05-30 11:34:35.000000000 +0800
+@@ -114,11 +114,13 @@
+ 	writel(CCM_PLL1_CTRL_EN | CCM_PLL1_CTRL_P(p) |
+ 	       CCM_PLL1_CTRL_N(clk / (24000000 * k / m)) |
+ 	       CCM_PLL1_CTRL_K(k) | CCM_PLL1_CTRL_M(m), &ccm->pll1_cfg);
+-	sdelay(200);
++
++	while (!(readl(&ccm->pll1_cfg) & CCM_PLL1_CTRL_LOCK))
++		;
+ 
+ 	/* Switch CPU to PLL1 */
+-	writel(AXI_DIV_3 << AXI_DIV_SHIFT |
+-	       ATB_DIV_2 << ATB_DIV_SHIFT |
++	writel(AXI_DIV_4 << AXI_DIV_SHIFT |
++	       ATB_DIV_4 << ATB_DIV_SHIFT |
+ 	       CPU_CLK_SRC_PLL1 << CPU_CLK_SRC_SHIFT,
+ 	       &ccm->cpu_axi_cfg);
+ }
+diff -Naur u-boot-2016.05/board/sunxi/Kconfig u-boot-2016.05-bpi-20160620/board/sunxi/Kconfig
+--- u-boot-2016.05/board/sunxi/Kconfig	2016-05-16 22:40:32.000000000 +0800
++++ u-boot-2016.05-bpi-20160620/board/sunxi/Kconfig	2016-06-02 16:34:44.000000000 +0800
+@@ -623,4 +623,34 @@
+ 	default 0x4fe00000 if MACH_SUN4I || MACH_SUN5I || MACH_SUN6I || MACH_SUN7I || MACH_SUN8I || MACH_SUN50I
+ 	default 0x2fe00000 if MACH_SUN9I
+ 
++config BPI_CHIP
++	string "BPI_CHIP(a20/a31s/a83t/h3)"
++	default "a20"
++	---help---
++	BPI_CHIP (a20/a31s/a83t/h3)
++
++config BPI_BOARD
++	string "BPI_BOARD(bpi-m1/bpi-m1p/bpi-r1/bpi-m2/bpi-m2p/bpi-m3)"
++	default "bpi-m1"
++	---help---
++	BPI_BOARD(bpi-m1/bpi-m1p/bpi-r1/bpi-m2/bpi-m2p/bpi-m3)
++
++config BPI_SERVICE
++	string "BPI_SERVICE(linux/openelec)"
++	default "linux"
++	---help---
++	BPI_SERVICE(linux/openelec)
++
++config BPI_PATH
++	string "BPI_PATH(bananapi/board/service/)"
++	default "bananapi/bpi-m1/linux/"
++	---help---
++	BPI_PATH(bananapi/board/service/)
++
++config BPI_UENVFILE
++	string "BPI_UENVFILE(bananapi/board/service/uEnv.txt)"
++	default "uEnv.txt"
++	---help---
++	BPI_UENVFILE(bananapi/board/service/uEnv.txt)
++
+ endif
+diff -Naur u-boot-2016.05/bpi-m1 u-boot-2016.05-bpi-20160620/bpi-m1
+--- u-boot-2016.05/bpi-m1	1970-01-01 08:00:00.000000000 +0800
++++ u-boot-2016.05-bpi-20160620/bpi-m1	2016-06-20 09:31:29.061043259 +0800
+@@ -0,0 +1,9 @@
++export BOARD=bpi-m1
++export ARCH=arm
++KBUILD_OUTPUT=out/$BOARD
++export KBUILD_OUTPUT
++mkdir -p $KBUILD_OUTPUT
++export CROSS_COMPILE=arm-linux-gnueabihf-
++make Bananapi_defconfig
++make -j8
++./bpi-uimgz.sh $BOARD
+diff -Naur u-boot-2016.05/bpi-m1-legacy u-boot-2016.05-bpi-20160620/bpi-m1-legacy
+--- u-boot-2016.05/bpi-m1-legacy	1970-01-01 08:00:00.000000000 +0800
++++ u-boot-2016.05-bpi-20160620/bpi-m1-legacy	2016-06-20 09:39:43.429052743 +0800
+@@ -0,0 +1,9 @@
++export BOARD=bpi-m1-legacy
++export ARCH=arm
++KBUILD_OUTPUT=out/$BOARD
++export KBUILD_OUTPUT
++mkdir -p $KBUILD_OUTPUT
++export CROSS_COMPILE=arm-linux-gnueabihf-
++make BPI-Bananapi_defconfig
++make -j8
++./bpi-uimgz.sh $BOARD
+diff -Naur u-boot-2016.05/bpi-m1p u-boot-2016.05-bpi-20160620/bpi-m1p
+--- u-boot-2016.05/bpi-m1p	1970-01-01 08:00:00.000000000 +0800
++++ u-boot-2016.05-bpi-20160620/bpi-m1p	2016-06-20 09:40:21.585053475 +0800
+@@ -0,0 +1,9 @@
++export BOARD=bpi-m1p
++export ARCH=arm
++KBUILD_OUTPUT=out/$BOARD
++export KBUILD_OUTPUT
++mkdir -p $KBUILD_OUTPUT
++export CROSS_COMPILE=arm-linux-gnueabihf-
++make Sinovoip_BPI_M1_plus_defconfig
++make -j8
++./bpi-uimgz.sh $BOARD
+diff -Naur u-boot-2016.05/bpi-m1p-legacy u-boot-2016.05-bpi-20160620/bpi-m1p-legacy
+--- u-boot-2016.05/bpi-m1p-legacy	1970-01-01 08:00:00.000000000 +0800
++++ u-boot-2016.05-bpi-20160620/bpi-m1p-legacy	2016-06-20 09:40:53.297054083 +0800
+@@ -0,0 +1,9 @@
++export BOARD=bpi-m1p-legacy
++export ARCH=arm
++KBUILD_OUTPUT=out/$BOARD
++export KBUILD_OUTPUT
++mkdir -p $KBUILD_OUTPUT
++export CROSS_COMPILE=arm-linux-gnueabihf-
++make BPI-Sinovoip_BPI_M1_plus_defconfig
++make -j8
++./bpi-uimgz.sh $BOARD
+diff -Naur u-boot-2016.05/bpi-m2 u-boot-2016.05-bpi-20160620/bpi-m2
+--- u-boot-2016.05/bpi-m2	1970-01-01 08:00:00.000000000 +0800
++++ u-boot-2016.05-bpi-20160620/bpi-m2	2016-06-20 09:41:52.469055218 +0800
+@@ -0,0 +1,9 @@
++export BOARD=bpi-m2
++export ARCH=arm
++KBUILD_OUTPUT=out/$BOARD
++export KBUILD_OUTPUT
++mkdir -p $KBUILD_OUTPUT
++export CROSS_COMPILE=arm-linux-gnueabihf-
++make Sinovoip_BPI_M2_defconfig
++make -j8
++./bpi-uimgz.sh $BOARD
+diff -Naur u-boot-2016.05/bpi-m2p u-boot-2016.05-bpi-20160620/bpi-m2p
+--- u-boot-2016.05/bpi-m2p	1970-01-01 08:00:00.000000000 +0800
++++ u-boot-2016.05-bpi-20160620/bpi-m2p	2016-06-20 09:52:39.745067634 +0800
+@@ -0,0 +1,9 @@
++export BOARD=bpi-m2p
++export ARCH=arm
++KBUILD_OUTPUT=out/$BOARD
++export KBUILD_OUTPUT
++mkdir -p $KBUILD_OUTPUT
++export CROSS_COMPILE=arm-linux-gnueabihf-
++make Sinovoip_BPI_M2_plus_defconfig
++make -j8
++./bpi-uimgz.sh $BOARD
+diff -Naur u-boot-2016.05/bpi-m2p-legacy u-boot-2016.05-bpi-20160620/bpi-m2p-legacy
+--- u-boot-2016.05/bpi-m2p-legacy	1970-01-01 08:00:00.000000000 +0800
++++ u-boot-2016.05-bpi-20160620/bpi-m2p-legacy	2016-06-20 11:08:04.069154422 +0800
+@@ -0,0 +1,9 @@
++export BOARD=bpi-m2p-legacy
++export ARCH=arm
++KBUILD_OUTPUT=out/$BOARD
++export KBUILD_OUTPUT
++mkdir -p $KBUILD_OUTPUT
++export CROSS_COMPILE=arm-linux-gnueabihf-
++make BPI-Sinovoip_BPI_M2_plus_defconfig
++make -j8
++./bpi-uimgz.sh $BOARD
+diff -Naur u-boot-2016.05/bpi-m3 u-boot-2016.05-bpi-20160620/bpi-m3
+--- u-boot-2016.05/bpi-m3	1970-01-01 08:00:00.000000000 +0800
++++ u-boot-2016.05-bpi-20160620/bpi-m3	2016-06-20 09:43:22.017056936 +0800
+@@ -0,0 +1,9 @@
++export BOARD=bpi-m3
++export ARCH=arm
++KBUILD_OUTPUT=out/$BOARD
++export KBUILD_OUTPUT
++mkdir -p $KBUILD_OUTPUT
++export CROSS_COMPILE=arm-linux-gnueabihf-
++make Sinovoip_BPI_M3_defconfig
++make -j8
++./bpi-uimgz.sh $BOARD
+diff -Naur u-boot-2016.05/bpi-r1 u-boot-2016.05-bpi-20160620/bpi-r1
+--- u-boot-2016.05/bpi-r1	1970-01-01 08:00:00.000000000 +0800
++++ u-boot-2016.05-bpi-20160620/bpi-r1	2016-06-20 09:43:58.729057640 +0800
+@@ -0,0 +1,9 @@
++export BOARD=bpi-r1
++export ARCH=arm
++KBUILD_OUTPUT=out/$BOARD
++export KBUILD_OUTPUT
++mkdir -p $KBUILD_OUTPUT
++export CROSS_COMPILE=arm-linux-gnueabihf-
++make Lamobo_R1_defconfig
++make -j8
++./bpi-uimgz.sh $BOARD
+diff -Naur u-boot-2016.05/bpi-r1-legacy u-boot-2016.05-bpi-20160620/bpi-r1-legacy
+--- u-boot-2016.05/bpi-r1-legacy	1970-01-01 08:00:00.000000000 +0800
++++ u-boot-2016.05-bpi-20160620/bpi-r1-legacy	2016-06-20 09:44:39.693058426 +0800
+@@ -0,0 +1,9 @@
++export BOARD=bpi-r1-legacy
++export ARCH=arm
++KBUILD_OUTPUT=out/$BOARD
++export KBUILD_OUTPUT
++mkdir -p $KBUILD_OUTPUT
++export CROSS_COMPILE=arm-linux-gnueabihf-
++make BPI-Lamobo_R1_defconfig
++make -j8
++./bpi-uimgz.sh $BOARD
+diff -Naur u-boot-2016.05/bpi-uimgz.sh u-boot-2016.05-bpi-20160620/bpi-uimgz.sh
+--- u-boot-2016.05/bpi-uimgz.sh	1970-01-01 08:00:00.000000000 +0800
++++ u-boot-2016.05-bpi-20160620/bpi-uimgz.sh	2016-06-20 09:35:24.333047773 +0800
+@@ -0,0 +1,14 @@
++#!/bin/bash
++
++BOARD=$1
++if [ -z $BOARD ] ; then
++	echo "usage: $0 BOARD"
++	exit 1
++fi
++
++echo ${BOARD}
++UBOOTBIN=out/${BOARD}/u-boot-sunxi-with-spl.bin
++UBOOTIMG=out/u-boot-2016.05-${BOARD}.img
++cp -a ${UBOOTBIN} ${UBOOTIMG}
++rm -f ${UBOOTIMG}.gz
++gzip $UBOOTIMG
+diff -Naur u-boot-2016.05/build.sh u-boot-2016.05-bpi-20160620/build.sh
+--- u-boot-2016.05/build.sh	1970-01-01 08:00:00.000000000 +0800
++++ u-boot-2016.05-bpi-20160620/build.sh	2016-06-20 11:46:26.701198592 +0800
+@@ -0,0 +1,10 @@
++./bpi-m1-legacy
++./bpi-m1p-legacy
++./bpi-r1-legacy
++./bpi-m1
++./bpi-m1p
++./bpi-r1
++./bpi-m2
++./bpi-m2p-legacy
++./bpi-m2p
++./bpi-m3
+diff -Naur u-boot-2016.05/configs/Bananapi_defconfig u-boot-2016.05-bpi-20160620/configs/Bananapi_defconfig
+--- u-boot-2016.05/configs/Bananapi_defconfig	2016-05-16 22:40:32.000000000 +0800
++++ u-boot-2016.05-bpi-20160620/configs/Bananapi_defconfig	2016-05-31 23:06:28.000000000 +0800
+@@ -25,3 +25,4 @@
+ CONFIG_NETCONSOLE=y
+ CONFIG_ETH_DESIGNWARE=y
+ CONFIG_USB_EHCI_HCD=y
++CONFIG_AXP_ALDO4_VOLT=2500
+diff -Naur u-boot-2016.05/configs/BPI-Bananapi_defconfig u-boot-2016.05-bpi-20160620/configs/BPI-Bananapi_defconfig
+--- u-boot-2016.05/configs/BPI-Bananapi_defconfig	1970-01-01 08:00:00.000000000 +0800
++++ u-boot-2016.05-bpi-20160620/configs/BPI-Bananapi_defconfig	2016-06-02 16:35:15.000000000 +0800
+@@ -0,0 +1,35 @@
++CONFIG_ARM=y
++CONFIG_ARCH_SUNXI=y
++CONFIG_MACH_SUN7I=y
++CONFIG_DRAM_CLK=432
++CONFIG_VIDEO_COMPOSITE=y
++CONFIG_GMAC_TX_DELAY=3
++CONFIG_DEFAULT_DEVICE_TREE="sun7i-a20-bananapi"
++# CONFIG_SYS_MALLOC_CLEAR_ON_INIT is not set
++CONFIG_SPL=y
++CONFIG_SYS_EXTRA_OPTIONS="SUNXI_GMAC,RGMII,MACPWR=SUNXI_GPH(23),AHCI"
++CONFIG_HUSH_PARSER=y
++CONFIG_CMD_BOOTZ=y
++# CONFIG_CMD_IMLS is not set
++# CONFIG_CMD_FLASH is not set
++CONFIG_CMD_MMC=y
++CONFIG_CMD_I2C=y
++# CONFIG_CMD_FPGA is not set
++CONFIG_CMD_DHCP=y
++CONFIG_CMD_MII=y
++CONFIG_CMD_PING=y
++CONFIG_CMD_EXT2=y
++CONFIG_CMD_EXT4=y
++CONFIG_CMD_FAT=y
++CONFIG_CMD_FS_GENERIC=y
++CONFIG_NETCONSOLE=y
++CONFIG_ETH_DESIGNWARE=y
++CONFIG_USB_EHCI_HCD=y
++CONFIG_AXP_ALDO4_VOLT=2500
++CONFIG_ARMV7_BOOT_SEC_DEFAULT=y
++CONFIG_OLD_SUNXI_KERNEL_COMPAT=y
++CONFIG_BPI_CHIP="a20"
++CONFIG_BPI_BOARD="bpi-m1"
++CONFIG_BPI_SERVICE="linux"
++CONFIG_BPI_PATH="bananapi/bpi-m1/linux/"
++CONFIG_BPI_UENVFILE="bananapi/bpi-m1/linux/uEnv.txt"
+diff -Naur u-boot-2016.05/configs/BPI-Lamobo_R1_defconfig u-boot-2016.05-bpi-20160620/configs/BPI-Lamobo_R1_defconfig
+--- u-boot-2016.05/configs/BPI-Lamobo_R1_defconfig	1970-01-01 08:00:00.000000000 +0800
++++ u-boot-2016.05-bpi-20160620/configs/BPI-Lamobo_R1_defconfig	2016-06-02 16:35:34.000000000 +0800
+@@ -0,0 +1,33 @@
++CONFIG_ARM=y
++CONFIG_ARCH_SUNXI=y
++CONFIG_MACH_SUN7I=y
++CONFIG_DRAM_CLK=432
++CONFIG_MMC0_CD_PIN="PH10"
++CONFIG_GMAC_TX_DELAY=4
++CONFIG_DEFAULT_DEVICE_TREE="sun7i-a20-lamobo-r1"
++# CONFIG_SYS_MALLOC_CLEAR_ON_INIT is not set
++CONFIG_SPL=y
++CONFIG_SYS_EXTRA_OPTIONS="SUNXI_GMAC,RGMII,MACPWR=SUNXI_GPH(23),AHCI,SATAPWR=SUNXI_GPB(3)"
++CONFIG_HUSH_PARSER=y
++CONFIG_CMD_BOOTZ=y
++# CONFIG_CMD_IMLS is not set
++# CONFIG_CMD_FLASH is not set
++CONFIG_CMD_MMC=y
++CONFIG_CMD_I2C=y
++# CONFIG_CMD_FPGA is not set
++CONFIG_CMD_DHCP=y
++CONFIG_CMD_MII=y
++CONFIG_CMD_PING=y
++CONFIG_CMD_EXT2=y
++CONFIG_CMD_EXT4=y
++CONFIG_CMD_FAT=y
++CONFIG_CMD_FS_GENERIC=y
++CONFIG_ETH_DESIGNWARE=y
++CONFIG_USB_EHCI_HCD=y
++CONFIG_ARMV7_BOOT_SEC_DEFAULT=y
++CONFIG_OLD_SUNXI_KERNEL_COMPAT=y
++CONFIG_BPI_CHIP="a20"
++CONFIG_BPI_BOARD="bpi-r1"
++CONFIG_BPI_SERVICE="linux"
++CONFIG_BPI_PATH="bananapi/bpi-r1/linux/"
++CONFIG_BPI_UENVFILE="bananapi/bpi-r1/linux/uEnv.txt"
+diff -Naur u-boot-2016.05/configs/BPI-Sinovoip_BPI_M1_plus_defconfig u-boot-2016.05-bpi-20160620/configs/BPI-Sinovoip_BPI_M1_plus_defconfig
+--- u-boot-2016.05/configs/BPI-Sinovoip_BPI_M1_plus_defconfig	1970-01-01 08:00:00.000000000 +0800
++++ u-boot-2016.05-bpi-20160620/configs/BPI-Sinovoip_BPI_M1_plus_defconfig	2016-06-02 16:35:46.000000000 +0800
+@@ -0,0 +1,37 @@
++CONFIG_ARM=y
++CONFIG_ARCH_SUNXI=y
++CONFIG_MACH_SUN7I=y
++CONFIG_DRAM_CLK=432
++CONFIG_USB1_VBUS_PIN="PH0"
++CONFIG_USB2_VBUS_PIN="PH1"
++CONFIG_VIDEO_COMPOSITE=y
++CONFIG_GMAC_TX_DELAY=3
++CONFIG_DEFAULT_DEVICE_TREE="sun7i-a20-sinovoip-bpi-m1-plus"
++# CONFIG_SYS_MALLOC_CLEAR_ON_INIT is not set
++CONFIG_SPL=y
++CONFIG_SYS_EXTRA_OPTIONS="SUNXI_GMAC,RGMII,MACPWR=SUNXI_GPH(23),AHCI"
++CONFIG_HUSH_PARSER=y
++CONFIG_CMD_BOOTZ=y
++# CONFIG_CMD_IMLS is not set
++# CONFIG_CMD_FLASH is not set
++CONFIG_CMD_MMC=y
++CONFIG_CMD_I2C=y
++# CONFIG_CMD_FPGA is not set
++CONFIG_CMD_DHCP=y
++CONFIG_CMD_MII=y
++CONFIG_CMD_PING=y
++CONFIG_CMD_EXT2=y
++CONFIG_CMD_EXT4=y
++CONFIG_CMD_FAT=y
++CONFIG_CMD_FS_GENERIC=y
++CONFIG_NETCONSOLE=y
++CONFIG_ETH_DESIGNWARE=y
++CONFIG_AXP_ALDO4_VOLT=2500
++CONFIG_USB_EHCI_HCD=y
++CONFIG_ARMV7_BOOT_SEC_DEFAULT=y
++CONFIG_OLD_SUNXI_KERNEL_COMPAT=y
++CONFIG_BPI_CHIP="a20"
++CONFIG_BPI_BOARD="bpi-m1p"
++CONFIG_BPI_SERVICE="linux"
++CONFIG_BPI_PATH="bananapi/bpi-m1p/linux/"
++CONFIG_BPI_UENVFILE="bananapi//bpi-m1p//linux//uEnv.txt"
+diff -Naur u-boot-2016.05/configs/BPI-Sinovoip_BPI_M2_plus_defconfig u-boot-2016.05-bpi-20160620/configs/BPI-Sinovoip_BPI_M2_plus_defconfig
+--- u-boot-2016.05/configs/BPI-Sinovoip_BPI_M2_plus_defconfig	1970-01-01 08:00:00.000000000 +0800
++++ u-boot-2016.05-bpi-20160620/configs/BPI-Sinovoip_BPI_M2_plus_defconfig	2016-06-20 11:43:56.000000000 +0800
+@@ -0,0 +1,37 @@
++CONFIG_ARM=y
++CONFIG_ARCH_SUNXI=y
++CONFIG_MACH_SUN8I_H3=y
++CONFIG_DRAM_CLK=672
++CONFIG_DRAM_ZQ=3881979
++CONFIG_DRAM_ODT_EN=y
++CONFIG_MMC0_CD_PIN="PF6"
++CONFIG_MMC_SUNXI_SLOT_EXTRA=2
++CONFIG_USB1_VBUS_PIN="PG13"
++# CONFIG_VIDEO is not set
++CONFIG_DEFAULT_DEVICE_TREE="sun8i-h3-sinovoip-bpi-m2-plus"
++# CONFIG_SYS_MALLOC_CLEAR_ON_INIT is not set
++CONFIG_SPL=y
++CONFIG_SYS_EXTRA_OPTIONS="SATAPWR=SUNXI_GPG(11)"
++CONFIG_HUSH_PARSER=y
++CONFIG_CMD_BOOTZ=y
++# CONFIG_CMD_IMLS is not set
++# CONFIG_CMD_FLASH is not set
++CONFIG_CMD_MMC=y
++CONFIG_I2C0_ENABLE=y
++CONFIG_CMD_I2C=y
++# CONFIG_CMD_FPGA is not set
++CONFIG_CMD_DHCP=y
++CONFIG_CMD_MII=y
++CONFIG_CMD_PING=y
++CONFIG_CMD_EXT2=y
++CONFIG_CMD_EXT4=y
++CONFIG_CMD_FAT=y
++CONFIG_CMD_FS_GENERIC=y
++CONFIG_USB_EHCI_HCD=y
++CONFIG_ARMV7_BOOT_SEC_DEFAULT=y
++CONFIG_OLD_SUNXI_KERNEL_COMPAT=y
++CONFIG_BPI_CHIP="h3"
++CONFIG_BPI_BOARD="bpi-m2p"
++CONFIG_BPI_SERVICE="linux"
++CONFIG_BPI_PATH="bananapi/bpi-m2p/linux/"
++CONFIG_BPI_UENVFILE="bananapi//bpi-m2p//linux//uEnv.txt"
+diff -Naur u-boot-2016.05/configs/Sinovoip_BPI_M1_plus_defconfig u-boot-2016.05-bpi-20160620/configs/Sinovoip_BPI_M1_plus_defconfig
+--- u-boot-2016.05/configs/Sinovoip_BPI_M1_plus_defconfig	1970-01-01 08:00:00.000000000 +0800
++++ u-boot-2016.05-bpi-20160620/configs/Sinovoip_BPI_M1_plus_defconfig	2016-06-02 09:30:53.000000000 +0800
+@@ -0,0 +1,30 @@
++CONFIG_ARM=y
++CONFIG_ARCH_SUNXI=y
++CONFIG_MACH_SUN7I=y
++CONFIG_DRAM_CLK=432
++CONFIG_USB1_VBUS_PIN="PH0"
++CONFIG_USB2_VBUS_PIN="PH1"
++CONFIG_VIDEO_COMPOSITE=y
++CONFIG_GMAC_TX_DELAY=3
++CONFIG_DEFAULT_DEVICE_TREE="sun7i-a20-sinovoip-bpi-m1-plus"
++# CONFIG_SYS_MALLOC_CLEAR_ON_INIT is not set
++CONFIG_SPL=y
++CONFIG_SYS_EXTRA_OPTIONS="SUNXI_GMAC,RGMII,MACPWR=SUNXI_GPH(23),AHCI"
++CONFIG_HUSH_PARSER=y
++CONFIG_CMD_BOOTZ=y
++# CONFIG_CMD_IMLS is not set
++# CONFIG_CMD_FLASH is not set
++CONFIG_CMD_MMC=y
++CONFIG_CMD_I2C=y
++# CONFIG_CMD_FPGA is not set
++CONFIG_CMD_DHCP=y
++CONFIG_CMD_MII=y
++CONFIG_CMD_PING=y
++CONFIG_CMD_EXT2=y
++CONFIG_CMD_EXT4=y
++CONFIG_CMD_FAT=y
++CONFIG_CMD_FS_GENERIC=y
++CONFIG_NETCONSOLE=y
++CONFIG_ETH_DESIGNWARE=y
++CONFIG_AXP_ALDO4_VOLT=2500
++CONFIG_USB_EHCI_HCD=y
+diff -Naur u-boot-2016.05/configs/Sinovoip_BPI_M2_plus_defconfig u-boot-2016.05-bpi-20160620/configs/Sinovoip_BPI_M2_plus_defconfig
+--- u-boot-2016.05/configs/Sinovoip_BPI_M2_plus_defconfig	1970-01-01 08:00:00.000000000 +0800
++++ u-boot-2016.05-bpi-20160620/configs/Sinovoip_BPI_M2_plus_defconfig	2016-06-20 10:43:06.233125690 +0800
+@@ -0,0 +1,35 @@
++CONFIG_ARM=y
++CONFIG_ARCH_SUNXI=y
++CONFIG_MACH_SUN8I_H3=y
++CONFIG_DRAM_CLK=672
++CONFIG_DRAM_ZQ=3881979
++CONFIG_DRAM_ODT_EN=y
++CONFIG_MMC0_CD_PIN="PF6"
++CONFIG_MMC_SUNXI_SLOT_EXTRA=2
++CONFIG_USB1_VBUS_PIN="PG13"
++# CONFIG_VIDEO is not set
++CONFIG_DEFAULT_DEVICE_TREE="sun8i-h3-sinovoip-bpi-m2-plus"
++# CONFIG_SYS_MALLOC_CLEAR_ON_INIT is not set
++CONFIG_SPL=y
++CONFIG_SYS_EXTRA_OPTIONS="SATAPWR=SUNXI_GPG(11)"
++CONFIG_HUSH_PARSER=y
++CONFIG_CMD_BOOTZ=y
++# CONFIG_CMD_IMLS is not set
++# CONFIG_CMD_FLASH is not set
++CONFIG_CMD_MMC=y
++CONFIG_I2C0_ENABLE=y
++CONFIG_CMD_I2C=y
++# CONFIG_CMD_FPGA is not set
++CONFIG_CMD_DHCP=y
++CONFIG_CMD_MII=y
++CONFIG_CMD_PING=y
++CONFIG_CMD_EXT2=y
++CONFIG_CMD_EXT4=y
++CONFIG_CMD_FAT=y
++CONFIG_CMD_FS_GENERIC=y
++CONFIG_USB_EHCI_HCD=y
++CONFIG_BPI_CHIP="h3"
++CONFIG_BPI_BOARD="bpi-m2p"
++CONFIG_BPI_SERVICE="linux"
++CONFIG_BPI_PATH="bananapi/bpi-m2p/linux/"
++CONFIG_BPI_UENVFILE="bananapi//bpi-m2p//linux//uEnv.txt"
+diff -Naur u-boot-2016.05/drivers/mmc/sunxi_mmc.c u-boot-2016.05-bpi-20160620/drivers/mmc/sunxi_mmc.c
+--- u-boot-2016.05/drivers/mmc/sunxi_mmc.c	2016-05-16 22:40:32.000000000 +0800
++++ u-boot-2016.05-bpi-20160620/drivers/mmc/sunxi_mmc.c	2016-05-30 11:33:47.000000000 +0800
+@@ -269,7 +269,7 @@
+ 	unsigned i;
+ 	unsigned *buff = (unsigned int *)(reading ? data->dest : data->src);
+ 	unsigned byte_cnt = data->blocksize * data->blocks;
+-	unsigned timeout_msecs = byte_cnt >> 8;
++	unsigned timeout_msecs = byte_cnt >> 6;
+ 	if (timeout_msecs < 2000)
+ 		timeout_msecs = 2000;
+ 
+diff -Naur u-boot-2016.05/include/config_distro_bootcmd.h u-boot-2016.05-bpi-20160620/include/config_distro_bootcmd.h
+--- u-boot-2016.05/include/config_distro_bootcmd.h	2016-05-16 22:40:32.000000000 +0800
++++ u-boot-2016.05-bpi-20160620/include/config_distro_bootcmd.h	2016-06-02 16:32:58.000000000 +0800
+@@ -281,7 +281,7 @@
+ 	BOOTENV_SHARED_IDE \
+ 	BOOTENV_SHARED_UBIFS \
+ 	BOOTENV_SHARED_EFI \
+-	"boot_prefixes=/ /boot/\0" \
++	"boot_prefixes=" CONFIG_BPI_PATH " / /boot/\0" \
+ 	"boot_scripts=boot.scr.uimg boot.scr\0" \
+ 	"boot_script_dhcp=boot.scr.uimg\0" \
+ 	BOOTENV_BOOT_TARGETS \
+diff -Naur u-boot-2016.05/include/configs/sunxi-common.h u-boot-2016.05-bpi-20160620/include/configs/sunxi-common.h
+--- u-boot-2016.05/include/configs/sunxi-common.h	2016-05-16 22:40:32.000000000 +0800
++++ u-boot-2016.05-bpi-20160620/include/configs/sunxi-common.h	2016-06-02 15:45:52.000000000 +0800
+@@ -16,6 +16,12 @@
+ #include <asm/arch/cpu.h>
+ #include <linux/stringify.h>
+ 
++#ifdef BPI
++#else
++#undef CONFIG_SYS_PROMPT
++#define	CONFIG_SYS_PROMPT "IoT> "
++#endif
++
+ #ifdef CONFIG_OLD_SUNXI_KERNEL_COMPAT
+ /*
+  * The U-Boot workarounds bugs in the outdated buggy sunxi-3.4 kernels at the
+@@ -293,7 +299,7 @@
+  * The amount of RAM to keep free at the top of RAM when relocating u-boot,
+  * to use as framebuffer. This must be a multiple of 4096.
+  */
+-#define CONFIG_SUNXI_MAX_FB_SIZE (16 << 20)
++#define CONFIG_SUNXI_MAX_FB_SIZE (32 << 20) /* BPI 16 */
+ 
+ /* Do we want to initialize a simple FB? */
+ #define CONFIG_VIDEO_DT_SIMPLEFB
+@@ -303,6 +309,10 @@
+ #define CONFIG_CFB_CONSOLE
+ #define CONFIG_VIDEO_SW_CURSOR
+ #define CONFIG_VIDEO_LOGO
++#ifdef BPI
++#else
++#define CONFIG_VIDEO_BMP_LOGO
++#endif
+ #define CONFIG_VIDEO_STD_TIMINGS
+ #define CONFIG_I2C_EDID
+ #define VIDEO_LINE_LEN (pGD->plnSizeX)
+@@ -460,6 +470,7 @@
+ 	func(DHCP, dhcp, na)
+ 
+ #ifdef CONFIG_OLD_SUNXI_KERNEL_COMPAT
++/*
+ #define BOOTCMD_SUNXI_COMPAT \
+ 	"bootcmd_sunxi_compat=" \
+ 		"setenv root /dev/mmcblk0p3 rootwait; " \
+@@ -471,6 +482,19 @@
+ 		"ext2load mmc 0 0x43000000 script.bin && " \
+ 		"ext2load mmc 0 0x48000000 uImage && " \
+ 		"bootm 0x48000000\0"
++*/
++/* BPI */
++#define BOOTCMD_SUNXI_COMPAT \
++	"bootcmd_sunxi_compat=" \
++		"setenv root /dev/mmcblk0p2 rootwait; " \
++		"if fatload mmc 0 0x44000000 ${bpi}/${board}/${service}/uEnv.txt; then " \
++			"echo Loaded environment from uEnv.txt; " \
++			"env import -t 0x44000000 ${filesize}; " \
++		"fi; " \
++		"setenv bootargs console=${console} root=${root} ${extraargs}; " \
++		"fatload mmc 0 0x43000000 script.bin && " \
++		"fatload mmc 0 0x48000000 uImage && " \
++		"bootm 0x48000000\0"
+ #else
+ #define BOOTCMD_SUNXI_COMPAT
+ #endif
+@@ -506,6 +530,12 @@
+ 	DFU_ALT_INFO_RAM \
+ 	"fdtfile=" CONFIG_DEFAULT_DEVICE_TREE ".dtb\0" \
+ 	"console=ttyS0,115200\0" \
++	"bpiver=2\0" \
++	"bpi=bananapi\0" \
++	"chip=" CONFIG_BPI_CHIP "\0" \
++	"board=" CONFIG_BPI_BOARD "\0" \
++	"service=" CONFIG_BPI_SERVICE "\0" \
++	"UENVFILE=" CONFIG_BPI_UENVFILE "\0" \
+ 	BOOTCMD_SUNXI_COMPAT \
+ 	BOOTENV
+ 
+diff -Naur u-boot-2016.05/tools/logos/bananapi.bmp u-boot-2016.05-bpi-20160620/tools/logos/bananapi.bmp
+--- u-boot-2016.05/tools/logos/bananapi.bmp	1970-01-01 08:00:00.000000000 +0800
++++ u-boot-2016.05-bpi-20160620/tools/logos/bananapi.bmp	2016-06-01 11:12:08.000000000 +0800
+@@ -0,0 +1,15 @@
++BM6¤      6  (                                    øøö z[% ÷ÿë fR/ íîë úÿÿ ùÿş úıÿ „`" ÿÿğ ûşö I9 öıû ¾¿ öôñ í÷ò ®›9 ¦–; ıÿÿ ûıı ÅÂ ùÿû ©ŸY ÿÿí [K+ õÿ÷ RF, pW) Œb$ ÿÿş _ şÿı ıÿü ııü ûÿú ùÿø ûûú ÿÿê Ÿ‰; øù÷ ÚÜÁ ÷ùö ÖÙ³ ¬˜; ×Õ´ ÒÒ¹ ÿÿû “{/ ıÿù ııù öüü ÿÿç XH, øÿà êòğ ÅÅ ÿÿø øüû øúû †= u]% «•> cT1  _ ¶¨P ÿşÿ şşş ¦“9 ÿüÿ _. ÿúÿ ÿÿõ üüü ûüû ıøı ûÿñ ùúù ‡D ÷ü÷ i= ÙÏ­ şşû øÿÿ ÷ÿş ÿÿò w5 ¸µj ²¢I ıÿğ ùüö úÿí øøõ ÷ÿê ª A |k7 LB+ €f1 ûÿÿ ùÿı öıú öûú õûù õôï –7 `Q/ ıÿş üÿı ûÿü _M. µ¦F úÿû ùıú øıù y. ÷ıø öı÷ »»x ûÿù úÿø şşò øÿö ùı÷ úûø óÿñ äçÑ ¡( O@% úşÿ «‘/ ˆvA ùüş ƒ]! ÷ÿò øùó ÷÷ò ğöõ nX* ışÿ ıüÿ ÿÿ÷ úüü øşú ûÿó ùÿñ \$ øÿğ ÒÈ¡ ¯A óôõ ˜„7 œƒ1 ¬™> sU" ÿşş ışü ÿÿô úşù ùúø øú÷ ùÿî ³®q øø÷ ÷øö ÷öö B1 üşø ÷ÿı ÿÿñ ûü÷ ùşõ ôÿú æìå úüö ùÿë ò÷ø OD- ‹b' …c+ eP, dN+ ûÿş ÙÍ© øÿû ÿÿî øûû üÿë x^( »²_ ÷ÿæ ¦C ÿÿÿ €d- ÿıÿ ÿûÿ ııı ÿùÿ úÿú ¡> øÿø öÿö ÚàÂ ùùù ÷û÷ ùüï ö÷ö õõõ ‚o6 ƒm7 š~- ÿÿü øşÿ ûÿø ‹r2 pZ. ¹ªW ¾¼m N># ÿÿù ûşÿ İË¤ üÿö ¤‹; ÷şû {], ñÿÿ ZJ, uY& õóï òñì g/ ôıÿ ·¤> ùÿğ nV& ìğí ”|2 öÿş úüø ‡t9 úÿî                                                                 ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾‰ÚÚÚÚÚ‰A¾ÑÑÑ¾A¾iiii¾¾Aaa¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾RRRaaaÚÚÚÚÚ‚æææææÒÚ‰¾Ñ.Ù8‹GÙÀÀ¾ knnk‰ÚRæààìÒÚÚ¾¾ÑÑÑ.Ñ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾RRRaaaÚÚÚÚÚ‰AAAÑ...™DÁAÑ0u Ñ¾ÀDÀ‰¦¦RÚÚÚ¾¾ÑÑÑ.Ñ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾iiii.‹›GG‹ÙÑAA‰Òæææ‚FÁÀ™.Ù.ÑDFÃÃFÀÑ.¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾ÀÀAA¾ÑÑ.ÙÙÙ88G	·	§›‹ÙAÚÒææààæFFDAÑÑÑÀDFÃÃFD™Ñ.ÙÙÙ..ÑÑ¾¾‰¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾ÀÀÀÀAÑÙ8‹‹G››››GG‹8ÙÑ¾AÚÒææ‚ÃFÁÀaÚ‚‚‚æææRÙ‹88ÙÙ.Ñ¾ÚÚÚ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾ÀÀAAÑÑ.Ù8‹G››G.¾¾¾¾¾AAAAADDAi´RìææààààŞÙ88ÙÙ.Ñ¾ÚÚÒ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾ÑÑÑ.ÙÙ88 ÒææÒÒÚAÑ..ÙÙÙ.Ù‹›TT›‹0kkkuÜT›ÙÑÑ¾¾ÚÚÚÚ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾.Ù.Ñiaa¾æææææÒÚA¾Ñ..ÙÙÙÙ0G›TT›‹.ÑÑÙGT›ÚÚÚÚÚÚÚÚÚÚÚÚÚÚÚ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾ÑÙ‹0kkRÒÒÚDÀ”A‚¸Œd:ÚÚÚÚÒààì´¾AÁÁFÃÃÁQ1ÀææææææddŒŒ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾Ñ0ÓvÆ¶ìììææ”ÁÁÁD¾äššÂÂB¾aìæŠFFÁŠ®®®ŠFJJD:ææææÒ2ÚÚÂH¾¾$¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾ ÓvÆŞìææææÒ®ÁDÁä¾Í.¨.f8‹‹G››T‹JÃDDÁÁF:àààààà .®®£LH!™¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾iuvÆ¦ììæì®‡AAÀä..ÑÑ.›8‹·%	·%3333%§›§ww›‹Ùrà{ï3G88Ù‹w¨Ù..Ñ$¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾ k´R‹››%·33wGä’-3|Û’MÏEEÔ°°°ëM7’555µÛ753%%·§T§›8Ù$$Ú¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AÚÚ…‹·333Û,MOØØ³˜˜˜˜˜˜ƒƒƒƒƒØ5Û<˜ƒtÛ533%›8…£Ú‚¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾ADÁDÀÀA¾.w§35 ½Ô˜˜˜˜˜˜°˜ÏM   M³³Û5Û??˜ƒƒ˜° |5›.¾Úæ®¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾ÚÚÑ.ÑÑÑaÚÁÁDÀÑ‹T(Oâ˜½×Û55Û|53%%355553333|µ%Û????˜°³ØOO 5T%f.AÑÑÑÑÑ¾¾Ñ.Ñ¾¾aÚÚaa¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾ÚææR0G›8...GÜì‡æ‚D	%È˜˜ƒ˜˜MM (5			§T§G‹‹8ÙÙÙ8KK8.ÑÙ‹G‹88·Û????@Û ˜ÕéE ÛP‹$Ñ¨‹8›‹8w…Ñia‹›‹Ùìæææìai¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾Úææ.G›G8Ù…..6R‚êJ8	P `˜˜˜ƒÖÛ33GB¾¾Â¾¾¾¾¾¾¾¾¾¾ uuÀÁFDnàRÑTÛ????»3Gf3ÛÛ ³³°˜˜â µ§	›‹‹8Ñii¸Â![‹G8.ìææìÒai¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾RAÀÑÙGG‹6ŠÀã%%5Û E˜˜ÏÛ(3T‹®¾¾¡L¾¾Â¾¾¾¾¾¾¾ uuÀÁFDnàRÑTÛ????Ö%Ù.G%555(Û `ßß˜˜UÛ3.Ræàæ®$™Ù‹´¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾0.ÀDD™80Şì2J£T3Û»Ğ˜˜°MÛ33%‹¨®ààà2ÂHÉÂ¾¾¡¾¾¾¾¾¾¾ uuÀÁFDnàRÑTÛ????3o®.·%	§%33| Ôƒ˜˜ß’¹…IAÀÀÃDÀÒææÒaÑ.ÙÙÙ.Ñiaa¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾ÑGGÑÀÁÀ´ìàà®Á85ÛĞƒ˜ƒÖ(3	8DDÁ‚æàà®2¾¾¾¾¾¾B¾¾¾¾¾¾¾ uuÀÁFDnàRÑTÛ????TRì›TãÙ‹		§5’ ¿˜˜°×Û3GDJ®®àààæÙ‹GG‹8.a¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾.G›ÙÀÚÒæàRÉ83ƒ˜»È55§.DÃÃJJŠÚab¾¾¾HH¾¾¾¾¾¾¾¾¾ uuÀÁFDnàRÑTÛ????›ææ®8‹Ñ¾:$‹wÑ u›, ½˜˜Ô ÛäÁJ®àààìÙ8‹G‹8.¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾ÑÙ‹‹Ùìæ‚Š¨·PM˜M’53ËÑ‰:ÃÃJÃÁ‹G‹Ñ¾¾Â$$Â¾¾¾¾¾¾¾¾ uuÀÁFDnàRÑTÛ????›ìææ.w$2ÒL«àà0335Û»°˜˜ ,äÙ¾RaÑÑ...ÑÑ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾ÑÙ8uìà‚FÑ3Ûå˜%·K{Æeæææ®ŠDÀ.wT›.Â¾¾¾¾¾B¾¾¾¾¾¾¾ uuÀÁFDnàRÑTÛ????T‡ææ.Ù‚ì‡®Ú:ææææ.G	335 â˜˜˜t3›G8.ÑaÚÚa¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾A™Ñ ª6àêÀ5Û/ƒ±1ÀÀÀÚÒæààà®Ş 8G	‹.¾¾LL¾Â£¾¾¾¾¾¾¾ uuÀÁFDnàRÑTÛ????½	2æRÙ‹aìææ‰‰Ò.ææ·È ±˜Û3%3›.ææàæÒ‚¾Ñ1¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾QQ2ààæÑ	Û°ƒÛ3¨ÁÃÃÃŠìààààª¶k08Ñ™¾¾¾¾¾¾¾¾¾¾¾¾¾¾ uuÀÁFDnàRÑTÛ????½·´ìR8‹ÒæÒAA‰.Ù™Àææààà›5Û»Ğ˜˜ 53	8‡æàààæ2ÀÑ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾…æ‡æA	|ƒ53›Ò®ÃÃÁÀ¶ªª{ªªæ2‚ŠÉ$ÂBHÉ$¾¾¾¾¾¾¾¾ uuÀÁFDnàRÑTÛ????½oæ‹› RÒ‰A™ÑAÀD‚ÒÒ9›	%5˜˜˜%·iæàààæ‚:À¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾ikê‚J.3˜Û3T£ààŠDAkuxÇª¦ìÒŠŠ‰¾¾¾¾ÂÂ¾¾¾¾¾¾¾¾ uuÀÁFDnàRÑTÛ????½·bìR‹G R..AAÑÑ™AAÀ‰ÚÚs„
++wX5 U³3G”ÒÒæÒÚŠJA¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾a®ìŠ£.%˜Û3äÀD6àRkknuvvvukiÀFÃÃAHLB¾¾ÂÂ¾¾¾¾¾¾¾ uuÀÁFDnàRÑTÛ????½§eæì‹ËkRÙÙA8‹8.A‰Ú®ììæàªª§3ÛOO4OP§GÙz”AÚ‚Ú¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾àà£‹%Ûâ˜%‹AD‚®Rnunnk  Ñ[1!IB¾¾¾B¾BÂ¾¾¾B¾¾¾¾¾¾¾ uuÀÁFDnàRÑTÛ????MT®ààÙ‹RRÙÙ™Ù8Ù.Ñ¾®ÒRæààà{5( O5›wAÚæ‚‰¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾®æw35½T«ì«àRA...ÑÀÀÀÀÀA.„{„„©Ê¾¾H£Â¾É¾¾¾¾¾¾¾ uuÀÁFDnàRÑTÛ????‹æààk8RìRÙÙ™AæàæR´Ñ....ÑIaRT·%Pß˜t|%§ÑÚ®æÚ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾à®‹3Û˜E ¨Ò‡àìaQÑAAÀDÁÁDQä|****Èäf|-(((T›T›GÙ¾ak ÀÁFDk¦A›Û??M§|--(›GG››‹ÙààààkÙ88w‹.Ñ1ä|,(,(µ3ÛM˜5%ÙÀ®æ¾A¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾‰‚‡k3ƒOw0ªAÀÀAiaAÀA¾ÀÀA…->éƒ?È3OâEºM’ÛÛ3HÒAJ:ŠŠŠ..aÚ‰ÙP??ƒ 3 é˜˜˜ ÛÛÛ§T›eààà.GwÙ$Ñ¥… ˜ƒ?˜Ø’¼Èß¤t3‹Dæà‚‰¾Ñ..Ñ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AŠ‚k3Ô˜.Æª™DÀARÀÀa´ÑÑ™™™Ù5???<È5˜˜˜˜˜Ö(ÉD”Š®ÑÙÚÚ.P°?? 5q˜˜˜˜˜M’5‹eàwT‹.di8› ƒ???ƒ’8¶5Eä12àa¾ÚÒÒ¾ÑÙÙ.ÒÒ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AAH.|˜˜5Ñ¦ìÀDÀ¾´aÀÀa Ñ™ÀÀÙ§5M???˜*5PP(È5 ƒ˜˜± TÙãÀÚ:ÚÑÙÚ.P°??ƒ35ÛÛ’PÛMO¤P· ‡æË›8ÑÚ2iÙ‹ ƒ???3™2u·5ßØ3‹u.ÚÒæÑ.Ù.ÒÒ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾£8µ˜˜	AìRÀD¾i A‰RkÑAÀÀ1T3Vƒ??<*%	%5%3% ˜ƒÛ§Ù£‰8.aÚÙP°??3353T	%Û½˜EÛ›RRw›GBÒæa.‹ ??˜Û%ÃŠ´	35M %G.BŒ‚ÚÑ...ÒÒ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾ÑwG ƒgÚìÁDR.ÑAÚRìkÀÀÀIK%Û˜??˜*%8.ÑxuÑË5??˜Û›äi…Ù´a8P°??½3	3T®‡”G5|M˜??`|ÙL§›¨ÚææaÙ› ??|‹ÃÃ‚Ù33|~P3TÙÙ¡‚Ú..Ñ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾‹‹TO˜»	æìÚFDæà..AÚììkiADÀ03Û˜??˜*%ÀJÚàà®A	5W??O3w.k´
++
++ka8P°??M%‹Kkààà5Ûë??›…›G¡æà‹§ ??ƒÛ1JJJ‡­33(M³é3·‹.$‚Ú¸Ñ.Ñ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾Ñ››	ß˜t›ææŠFÁàà..Aaìª¶iÀDDÚu3Û˜??˜*›DJæààæ”ã3Û???˜’§Gík 
++k´i‹P°??§Ñìàà6‡T%5??ƒU5‹›‹Hæà®‹	 ??ƒÛ1ÃJFR{·55|Ø5·‹ÑÚÚ‚¾Ñ.ÑÚÚ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾Ñ‹T3ƒ ŸàæŠÃÁàà..Aaìª¶´ÀDŠ®n	ƒ??˜*‹ÁŠ®àà‡Š13(??ƒM.ÄkkkÑGP°??M§æ®ààìf3%Û??,››w‰æà®a‹	 ??˜ÛÃJ6ìª§5˜Ø(3›ÙHÚÚ¾ÑÑ¾ÚÚ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾Ñ†T	˜V«àÒÁFÁààÑÑAaì¦¶´ÀDŠ2k·’˜??˜*8ÃDvvÀJG5½ƒE%›.kkÑ›P°??M›¾AÒææ®ÙG›,ƒ??˜ §›w‚æàæG	 ??ƒ˜ÛTÃJŠæàv	T3Õ%3‹16ÚÚ¾ÑÑ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾
++f	Ô‡DFDààÑÑ¾aR¦k´ÀD2¶·’˜??˜*8ÃDÑ	§8AD.3Ô5TiìªR .TP°??MGAAafx{5˜?ƒ §›.Úæææ›· ?ƒ˜Û·FÃŠæààRÑ‹ÛßØÛ·›.ÚÚÑ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾ik…›Û˜3aaADDæà¾R¦kiÀD2¶’˜??˜*ÙÃÀ8%%›ÀDÁƒ°P	aæ®ì Ù§Û°??M›Š™...‹.…¦àT˜ƒ?ƒ 	ËÑæææ.	· ?ƒ˜Û%ÀÃæààD£Ù 3%8¾‚Ú¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾2w5Ø(ÑiDDæa¾A¾¶kiÀDŠ2u%’˜??˜*ÙÃÀ8%%GJÁF·M?ƒ(wÚæ®æÑÙ	Û°???MT™ÑÙÙfÙnìà¼˜??˜ wË™:ææ‚8	 ƒ?ƒ˜Û%.FæàìŠFJD‹P³(3w¾®Òa¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾®ä%ƒ wÙ ÀDARRÀA´kkÀDŠ2v%’˜??˜*ÙÃÁ.%8ÉFÀ5g???ƒ3‹àààÑ8·Û???MT‚ÀÀÑ.ÙÙÄ‡µƒ??˜ GÙ™®‚$G· ƒ?ƒ˜Û%.Šì2ÚFJÃDË3MØ ·G¾2ÒÚAÑ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾Úææa%Ö˜OwGÜ.ÀÀÚææAAik ÀÀÀ¸v3’˜??˜*ÙJŠ¾	·.:ŠÀ,Ğ???3‹æ®ààÑ8·Û???½§‚DÁD™Ñ…¶‹ ???˜w.A®Ú$› ƒƒ˜Û.RìiAÃJFÀ«·t˜Õ3‹¾2æÒÚÑ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾Ú®ææ5Û˜³PT›8QDÀààÀAik.ÑAÀÀ9v3’˜??ƒ*Ù:‚››‚‚ ????W3wæ®ààÑ8·Û???İ	æŠFÁÀAŞ¶Ó5M???˜(1QJJA‹T ˜ƒ˜Û§Ñ‚R¶šAFÃÁa{ÛÏ|‹2æÒÑÑ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾Úææ®·5½˜%	G.ÀAàæAAiÑÑ™AA¸u%’˜??ƒ*G‚FDvÓÀDJ(°????Û3Ù‚®à®.›%Û???İ30‰ŠŠŠ‚´©5’˜???±3Ñ™JÀAA‹G	 ƒ˜Û›æ¦Æ¬AÃÁ:®ª¼5MØµ§´æìŠ‰aiÑÑ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾®à5Û˜³Û5T†ÑbÑÑ¾¾.ÑA‚aT’˜??˜*3.JÁux.‹ÛÖ????|‹:æææRf3Û????Ğ5%›ÊÒæÑ3’U???˜P‹1Ñ™‹3 ƒ??˜Û›ìàÓÑÀD‰¶ŞŞT5³GªÒÁDìiÑ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾à‡¸›3|˜O3%›w¬yÑ.ÑÚ..‚Ú‹’˜??˜*%Tw	3%% °????M58ÑAŠ‚ææ®‹%5Ö??M553	GËG,E???Û·.¾wÙÑB.3 ??ƒÛGìàÇÜDÀaŞk›5³	ààFÁìiÑ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾Úæ®¡8	%ÛÕØ33T‹ kÑ‰Úai..21’˜??˜Û5 MM½¿<˜ƒÔ3GÙ J‰æìe‹%Ûgƒ?˜5ÛMMÏM°ƒ˜İÛ%G.LA1.i.3t??ƒÛGbª©G™DÀa¶Æ´G5t˜E¹ªàÁDìiAA¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AAÂÑwT3 ³³’33T†i¾ÚÑÑÚ28’˜??,3O~ƒƒ˜égM*‹A1¨ ÀÀ‚æRaK-é˜˜5â˜ƒƒ°UÛ53wÑA!Ñ.aÒ 3t??ÛG‹‹ÀÁDÚ¶ÆiG5t˜ß	ªª‚DDaìi¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾….™™G5ßßÛ3%fÑAÒÒaæÒ1’˜??˜Û§    ,35{6J:¾AÀÀ:a´f-    -¨,   ÖÖ Û3äfÑ‹‹¾Ú”¡ÑÑ¾aÒ 3??ÛG™‹8DFÁÚ¶n¾G5Ø§veÀÀiRi¾A¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾Ñw8$:Ò.TÛßØÏ(3§fÑAæÒiæ‚Q’˜??ƒÛ%‹‹1Á-{«æÒa¡AAALk f	%TÃ®ÁÑ	%3353%3fæà®.ÙA‚‰¨Bìi%???ÛG!¾‹8DFŠÒì¶¾G3³ §„ÊÀ™´i¾AA¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾Ñ88Q‚Òã‹% ÕÕ5%3ÙAÒaiææQ’˜??Û58šJÁ”--«-O7àR:ÍAAA†  Ù8ww¨F:ÁÃÉ.›GGw¬à‡àæ1‹‚ÒÚÀŠì´%??ÛG!¾‹8DÁæì¶G5M³Û§‹0™ ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾.f¾‚a$ÙT ³Õ53G‰ÚÑææQ’˜??˜*5	{æì®-- «   ìÚAA$$1 e®Œ$AÀÀDÁDAÒRæììììÒd.Ñ:æÒ®ÉAæ´%??ÛG!¾‹.ÀŠæàªÆÑ›(â~(§8Ñ¡ÑÑ¾A¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾Ñ.Ñ.ÙË·4³Û	ÙAA$Ñ.†‚Òæ’˜??ƒ*ààà-7-7« --®ÚAA™™1´RÒÚA‹›G8.iRìR.Ù8‹8ÑÚæ‚ÚAA:ìÍ3??ƒÛ‹AÜ0:Òà6ª{8· ³O3›Ùã¾ÑÑ¾aa¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾Ò¾.8‹ÙÑÌa. ˜|3Ù8Ù·Ù¾Ú:’˜??˜P.ÒææJ- 7   -O-àÚAA1™¨aRìææ‚‰G§›‹Ù´RRR¾ÑÙ8GG8Ñæ‚ÚAŠæ ƒ??˜Û‹Aa¥vì6àG%M %‹.$¾aiÑÑ¾aa¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾Úææ¾ÙG›8ÑÒæRÑ§â˜³|›§G§GÑÚÑ’˜??â|J6ÃÃJà - 7_-- -®aAA1™Q¾aìæææ‚i kkaAAÀÀDÀ.ÑæÒÚ¾ÀÚ®.%ƒ??˜Û›™a0u6àà{¼	’ÕØ(§‹ÀÀìÑÑ¾aa¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾ÚÒÒ¾.‹GÙÒ®æ‡G% ß³’·3	§w.’˜??â-DJ”ÃÒ- - ¯>---‡‚¾AFÀA¾aRììÒÒæàææìRRa‰ADDÁDÑÑÚÒÒÚÑÉ2…3 ??˜Û›™806à«ï%5Ø¹x.ÃÀàìÑ.¾aa¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾‰‰¾..R2i‹3é¤ 53%3§.£8’˜??˜*Z DŠ-7- >¯7-7OÈe9¾AJÀAAaRRaAÚæàààæìRRRÒææææ‚.ÚÒ‰Ñ.1$aw3???˜P‹AA8‹aª{%3OPxªAÃDàìÑ.™¾aa¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾A‰ÚÚÚ¸ŒÑ.w‹‹%Û½Õ(5%TÙ1‹˜??<È5ê «7-7¯>-7-  «kkÀJÀD‰Ú´Ñ¾Š‚‚ÚÚaaaRìææàìÑ.‰ÚAÑÙÑ£‹5g???˜P‹AA‹‹ÑÑÓT3˜ØGªàÀÃÃààÑ.Ñaa¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾Ñ88¾æææÒä‹	Ë 6›55 ÕÕ² 338Ñ‹’˜??˜7¹ª«-- ¯--7  -àkíQÀJÀF‰Ú´ÑÙ88.QQ...ÙÙ8888888‹‹ÙÚA.ÙÑÑI·±??˜ÛGDÀ‹‹.…8	PO˜|8ààFFÁæààÑ.Ñaa¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾Ñ88æàæ8	wÙæÑ355ÛÕÕ(5	%Û˜??˜53- ¯> «-- 76àa¡JÀDÀÀ‰Úa´.8‹‹‹88ÙÙÙÙÙ88‹GG›T›8ÑÚÀÑÙf8-O˜ƒ˜µwFÀ.8Ù85˜°3Tãàà®ÁÁ‚àà™ÑÑa¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾ÑÑ¾ÚÚ¾ÑÑÑaÑ›%		,Ø½5Û???? O  ---   -ààŠŠŠŠ‰Úa´  Ù8ÙAAAAA¾´´kk  kààæÒŠÁÀ.G	%-’’’7%ÑD£A[8	P³Û3›RAAAa¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾Ù‹w›§Pé˜ƒ@€???Mˆ>ÈÈ >> 7-àª‰‰‰‰‰A¾¾a‰aaaa´i´iRààìÚDÁÀÑw	·3§›8ÙêÆÑäF1.§5’OEÛ5%8¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾QÑÑ…wG§3’O˜˜??ƒ˜Û3| OO 7--6oÑÙ›§§TG‹8.AÀÀÁFFÁAÑÑÑÑÑ....ÙÙÙÙ8Óu.ÑAAA¾b¶Ş¶´êÀ£Ò®”™8	%5ÕØÛ›f¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾É£ÑãT·PM˜˜ƒ/ßP3%3Z{«Èª{..†‹	·	T›‹ÙÑAÀDÁÁFÁAÑÑÑÑ....ÙÙÙÙ8888.Ñ¾æààæ®®AADŠÀÙ3ÛMØ˜MP%8ÀŠA¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾‰‚‚Ú¾.f›	3, Ï˜˜*5È5{{àà«aäË‹X‹88ÙÙ..Ñ¾¾AA‰Úa.Ù88.æàààæ‚Ë·J.›P²³é 53GÀÃ®À¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾Ú‚®‚¾Ñ8%	%, OéÛ*Õ«GÙ1™ÑÙ0Æu¾ÀÀÀAAAa´RRRa‰AÑ8ÜÓRæàæ®Š[ä M3333 *533äJÃÃÀ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾®‡Úd®HÑ‹‹›·5 È*²é˜Û|3f.”ÀFÃFFŠŠÚRììììªª¦ÑÑÑÑÑÑÑ...ÙÙÙÙ8Šu©©ÆR‚‚ÃÀ3tƒƒ˜ 3%	ä-›	xnJJÀ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾H¾¸dÚÚ‚¾.Ù8w›ï¼3 ˜˜ß ’PwÙ DDDDÀAAaaRRììì¶ÑÑÑÑÑ....ÙÙ8Ù88ÑŠiÜXX›0:DÁw5Uƒ??˜,Ë¾DÃÚàÙÙ1™¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾Ñ¾¾¾¾¾Ñ..£À83Pƒ˜E  P3·	3T›w88ÑQ¾ÉAAÀŒ$ÚA¾i¾i  ÑÀ™G33%§wQ13Ûƒ????|¼”FJJ‚ààªÜ›GÑ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾...ÑÑ¾¾¾¾AFÃŠA.%3P| Mg˜³éß^ P53%%33G‹w1Ñ¾¾™!Q.¬¨8Ù...8G5555P O(G5Ğ??î5TAÃJJJæààv›GÑ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾.ÙÙ..ÑÑÑ®ì‡esn{535tMMÔß˜˜˜ééßO ’(3(P(33	››w	T››TT3|(,5(MÏ`Õá¤w3Ôƒ˜3›ÀJÃÃÃÁÒæª¶ki¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾.Ù....ÑÑÑÑ¾bReª{335Û  ³˜é˜³¤Øéß         OØ˜˜˜³³> -‹ä§3Û’3§‹ÀÃÃÃFDARàààa¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾ÑÑÑÑÑ¾¾¾¾AAÀA.ÜwX\\ïK
++¶eà›	3P’ÛÛ M^éé˜<˜˜˜˜˜˜˜˜˜˜˜˜˜˜ƒƒ¿˜âM’P(%ËÙ…‹Ù‹›§§GÙ!JÀDÀÑÑÑ¾Ràà¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AÀJ1.G›·GGãAæ6®DÙwËT§·3P|35È7t½MMMMMMMMM»ÛÛ5È(5	%Gf0Ä6ÀÀ[.ã DF‰:Ñ.Ù.™Ààà¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾‰ÚÚÚAÚÚ¾Q¾A‚ÚÚÚ®ŠÀD£DÀ™ÑÑ.¬…‹8‹‹GGGGä››§·	T§§§§%33%·		ïw.ÀJ™.8
++vuÚÁJA¾ÃFFàààk.QQDA¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾ÑÑÑÑÒÒaa‰o”‰:‚‚‚‚”ÁD QQSRRa‚®a‡aÚ‚Ú¸ŒiÉŒiiiikN{¦ÚJÁÀ¾†Óx´ÚJÁ‚DÃÁÃÒ6ààìÑ.QÀA¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AAAAAAAA¾¾¾¾¾¾¾ 000  ÑÑ..Ù8‹‹G.ÒææìR´k  ÑÑ¾AA¾¾¾AA‰‰‰‰‰AAA™¾A¾A¾¾¾¾¾¾¾¾¾¾¾¾¾¾i´´AAAA¾  iAAA¾AAA‰Ra™A¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AAAAAAAA¾¾¾¾¾¾¾¾ iii¾¾¾Ñ.ÙÙ8ÑæÒÒ´k 0..Ñ¾AA¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AAAAAAAAAAAAAAAADÁÁÁÁFFFFFFÁÁÁÁDÀAA¾Ñ.Ù..ÑA‰‰‰A¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AAAAAAAAAAAAAAAÀÁFFFFFÃÃÃÃFFÃÃÃÁÀAÑ.....Ñ‰ÚÚÚ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AAAAAAAAAAAAÀÀÀÀÀÀÀÀÀÀÀÀÀDŠÀÀÑÑ....ÑÑA‰‰ÚÚ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AAAAAAAAAAAA¾ÑÑÑÑiiaaa™ÑÑÑÑ™¾A‰‰‰ÚÚ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AAAAAAAAÑ.ÙÙ88‹‹80unkRìAÀÀÀÀÀÀAÀ‰‰‰‰‰Š‰A¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾A¾Ñ.Ù8‹GG‹80kRRAÀDÀDŠŠŠŠŠŠDÀÀÀA¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾£¾$¾$'š¾ÀJ£DÑ.Ù8Ù.Ñ!ŠÚ:ÚÚ®‚‡:ŠŠJ!AQ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾H£«ÑÑ...…ä(--((’’(-3%T‹.Q!DAadÒÒ‚‚ŠÀA™.¨¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾Aê¾¾êÑ…Ù…(O>O¯>O>>OO^^OM ,5	›Ë8Üa®®2®”ÉJ!..¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾ŠA¡Ñ…Ù O_  -’Û5|½q/<˜¿’%	›.i‰AAÀ ¨Ñ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾$A”¾í_>--5%|*5ÛW}}}}€€€€€}}}–˜ (%	äw$™¾AQ™¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾:«A¡ ¯-\\-’È--*Û€?}??}????}}}}€€}q˜˜MP›Ù¨£HA¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AA¡>O8--|È--*È’}}??}??€€€}???}}?}€€Ğ¿ˆ|.¾‚ÚA¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾ÀAAA‰  AAÀ’¯-„-È(--(-È*U}?}€??€??}}}?}??€??}€å äÙB2ìÒÚ 0Ü0 ¾AÀAAAAÀÀAAAAAAA¾¾¾¾¾¾¾¾¾¾¾¾¾A¾A¾¾¾¾¾¾¾¾¾¾A¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AAAA¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾.ÁÁÙÙÀÁ2Æv”JÙÙ-¯ ®È--*--(-µ5Å}€€€€€€€€}}}??}}}}}}}??}€ĞOPw®àà:Ú
++­¼\{ŠÃÁDÀÁÃÃ£AAAAAAA¡¾Ñ.äÙ..†ÑÑ†$Ì£ÂAÉÉAÀÉ‰¸ŠA$¾™AHÉ‰:‚dbaiio "N.¬†.Ù0.äíÑ0Ñ0'Ñä¢ii”6‰‰‰Íi«  …..fäIÍ¾¾¾z[.0¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾ÙÑFF8‹DF:Rx„‰DG-_ ‹È7È*’¼§wG37}€}€€}€€€€€€€€}}????}}}}}?€gØG¦æJ:„¼5¹
++aFÃÁÀAÀFÁDÀDJJŠŠ$¾Í.Ù88†0f…ÑÑ'¾¾ÍAAÍA®i!Q™äAa6R6ì6a99´†N œÙÙÙ†«8f..….f[.1ãÑÑäÍNœê”‰‰‰¡iiœÓ«äÙ..Í¾£L£¢01.Ù†¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾ÙÑFF88ÀÁ®„ËAA|ÕºéØ¤>OC€€€€€€€€€€€€€€€€€€????}}}?}€}}<5ÀÃ®A0‘iŠŠŠAÑ88ÙÑAÀ‚ŠAAA¾ÑÑ†- OO>OäÑfH¾¾$Ayk†-O¯O -kRRìa‡´b "œ->OO>O -«..†Ñ-O0ÑÑÑÑ>ÍŒÌÌ- O>O>-«š¾¾¾¾’O.¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾.ÁÁ88ÀÁŠÚÜ›¨Ùßq}}qq<ÎØ˜˜}€€}€€€€€€€€€€€€€€}}}??}}€€?}ç+(DÃÁÀAŠ‚ŠŠ‰ÙG›T‹HÀAA¾B«.äO>¤_h¤_>>O-ÑÑzL¾¡i…O>___¯__> ÆÆ69a9´ ->>¯__¯¯_>> «YäÑ>¯¯Ñ[Ñí>¯¤>i:ŒŒ-¯¯_____¯O’”ã¾¢$ _¯0¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾.ÁÀ88AÁŠ‹T‹’³Ô€?}€€€€€€€}}}}ç»»×€}€€ç€€€€€€€€€€€€}???}€}}?}}Ô(¨D£ÃÃJF‰Ñ.8G§›Ñ¾A¾Bz..-¯_¯_>>>¯h>_¯ ¨ÑÑ1ššf>¤>¯>¯>>¤_¯>{‡ê´‡9¯>¯¯>¯>>¤¯¯¯-ÑÑÑO>¯ Ñ†O>O¯ iii¯__>>>h>¯>O>”I >>…¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾ÑÀA88ADÁAw§	Oßİ€€€€€€€€}€€€ç}ç}¤×Ö€€}€€€€€€€€€€€€€€€}???€?€??ç^,8ÁJJÃDAi¾¾¾.‹‹Ñ¾¾š$Ñ.Ù
++O_>¯_  >¯__>¨..Ñ.† >>¯_h  >>_¯¯6n6b´>_>¤_O >_¯’ãÑO_>11¯>¤Of  ê¯_>¯¯  O¤¯OÑšäÑ ¯_.¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾i¾A8Ù¾ÀJ¾w	P³g€?€€€€€€ç€€€}}}×ĞÖÛ}€€€€€€€€€€€€€€€€€€€€}???€€?€˜M|ÙJJFÁ¾¾DFFFA$z.ÙÙ†>¯>O‹888‹¯_>>’ÙÜ.Ù_¯¤¯ ä‹‹‹ËG’>¯¯¯sk‡>>>_-....ä--í.Ñ>_¯ .>¤¯¯O|   u-_>¯_¤¯Ü„Ü’- ”i”Ì  O¯©¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾.ÙÙAŠAw·M¿;}}€€€€€ç€€€€€€€}×Û»€ç€€€€€€€€€€€€€€€€€€€€€}}}??€?ØM3ÃÃÁJ¾ÁÃÃÃÁÀ$Ñ¬88«-¯>_ä8ÜÜ8Ë88 _¯>>†8Ù…>¯_>888Ù†8(O>>¯-skk¯>_f.….Y.ÑzÌÑfO¯¯O¯>>>""f äœ>¯__¯_>Ü0
++0 Niko   >¤0¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AÀA.äÙíIA83`/€}}€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€}}?}}}]éQJÀ1.ŠJJÃÁAÉÑ.Ù8fOh¯>|†Ù©8ÙÜÜÜÙÙ>>> 88 ¯__- Q$.{-_¯>Onk…>__O  ÑÑÑÑÑÑ¾¾0O>____¯-…  …0>¯>’>_>_O(f00Ê ")  œ ¯¯0¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AÍAK‹Ü. yã,<–€?€€€€€€€€€€€€€€€€€€}}}€€€€€€€€€€€€€€€€€€€€€€}}}}}}}åÕµJ¨8äÑ‰:JÁA[f…‹|>__ fÜ.1..Ù.8.©«>_h8Ë¯_«ÀÀÀÀÀ”¾k¯_>n)’¯_¯-  ÑÑÑÑÑ¾¾¾¾0O_¯¯¯_OäÙ  N  ¯¯O«0’¯>>_¯(
++…      u ¯¯0¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AÀA‹›«"unbÑw˜}€€€€€€€€€}€€€€€€€}€€€ç€€}}€€€€€}€}€€ç€}€}€€€€€€€€€+g`›‹‹8Ùœif\GäL.Ù‹__¯È8¥Ñ0.ÑYÑ0._¯©…>__ a‰‰DDÁÁD:Éa‡-¯¯_È{¯¯O"  ¾A¾¾0O>_¤¯O8Ù Lo †>_¯ 00(>>¯¯¯’ÇskkkkÄk >_Ü¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AD- O>}?ƒ˜˜˜˜??????˜˜ƒƒqƒ˜????ƒƒƒƒ˜˜???????˜˜gOOO-ä…8>¯¯8ÙAA¾Ñ[>_OfÙ>__ a‚DÁFÃFJAab«¯¯>’u¯>œ  ¾AAA¾BšO>>¯Ü88†ij«_>>f0f0ê>>__v#k‡krk ¯_xÑ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AÃÀT-’O_O>Õq}}€<˜˜}€€€€€€€€€}˜˜Øƒ}€ççç€€}˜˜˜˜˜}}€€€€€€€}}˜ƒƒg¤(-- Oh¯O (H¨8>¯¯Ù.ÍAÀAA$Bz¾¢->¯O†.>__ a‚:FÁFJJÀAbp¯¯O-u_>   ¾¾¾¾AAA¾BšO¯>>‹Ù‰i«_>> 0Ó Ê   >_¯¯ #kkk#Ä ¯_ÓÑ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾ÀJÀ··0-OÆu›O×çç»€q}ç×ççççççççç»@½–ƒ€Ö×çççççç××»½m»×çççççççç»»}}€€7åM%‹1Ñ0- …¾AŠš¨Ù-h_¯(ÑÂADÁAÉA¾¾”¾ ¯_O¬¬>_¯ a‰JÁÃFDALvÈ>¯_-u¯¯Oœ  ¾¾¾¾AAAAB¾šO>_¤>8ËÙ::‡¯_¯0Y  ”iœO¤¯¯êkkk{ ¯_ ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾ÀÃÀ·¼#Ş-{6u8Oqç€€ççççççççççççççççççç€ççççççççççççççççç€çççççççççç}€çC*8‚É:¸¸AÀŠDÉ$ÑÙ|h_¯ IAÀÃÁÀŠAÀA$äO¯_O1…_¯êiÁFFÀÉŠkÓ ¯__Èv ¯¯>-  ¾¾¾¾AAAAB¾šO¯¯_¯hËÙ‚:_¯O0« iixO_¯¯O|Än{>¯>- ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AÃã›¼ kêÇ„ËO•×çççççççççççççççççççç×mçç»ççççççççm»çççççççççççççççç€€}<M‹ÁÀbaÚ:JÁDDA)O_¯O…JÀÀ¾B”B ¯¯_OíÑ ¯¯¯- BB¾¾œÓ>_>u-__¯   iiii¾AA¾B¾šO>_¯¯¯¯fŒÚei >¯¯- kê´Êv©-O_¯O>uÇ-O>¤ ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾Ù8Ñ 0ÓÓ\§OÕMMMMÅ““€C]•—C+C+&+C=½Å=W–C½½MÅ+€€“•Å•çç×ççç}ç—(Á!…©R‚®Ã”ÃF:¯¯¯{uä ÙÜÙ8Ù’O¯>¤O¡¾(__¤ÓêÓ{ÓÓäÓ_>>-nÆnO___’…kkÄ‡kk ¢¾¡¾”O_¯>O_>>kckk->>¤ên)kkÆv{x>¤>¯È«vê¯>¯ ¾¾$Â¾¾É¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾Ñ¾¾.8›­>>h>˜ƒƒ˜˜˜ƒ˜˜˜˜˜˜˜˜˜˜˜˜Ø˜˜˜˜˜˜³˜˜ƒ˜ƒ˜ØØ>hhÕ<q}}ç€}ç/ØO^^Mt«¾DFFJŠ«>¤>¯xkfËG‹«->¤¯¯_OLÀ” ¯>¤O-©©{©©©-O>>ÇÄn«-¯>¯>-ÄnÄnn«|¢ÍBÂ¾O¯> ->_h>nnsên>>¤O-Ænuvv¯>¯{vvx->¤>_$Â¾«Â¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AAAAA¾fÙG«È353|q€}€€–ëq€ç}ç€C–q}}}}}–qC€€=&q–}€}€/åP5ä¼5È’ lˆWm€ç}}€}qq< «8…:Ú®->__¤>-È|’O>__¤__>¾ÉA>¯_h’«(’ >_>¤>|kkÌnk O__¯-(-->O«¾¾êO¯¯ Ü-O¤¯>OkkÄêk>>¯¯¯-|(->¯¯_>|vÓ„Ó’¯_¯¤O ’(H$¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AAAÀDDÀÀŠ
++‹\·¹%3’q€}}}}q}ç}}}}}}?}?}}}€}}}–q}}€?€q<*¼ek8T‹”Jºçç€ççççç&M|	›ÙNoeê->¯¯¯>¯¯_>>>¤¯>¯_>¾¡ÉA|>>¯>¯_¯¯¯¯¯_¯Ovkêkkê >__¯¯¯>>_¯¤¯ É¾¾>¯¯ÜG-O_h>êkkkNO>¯¯¯¯¯¯¯>¤>>O’x„„xuu#¯¯¯¯>_¯O”¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AAÀDDÁÁÁÁJAãÑ8K›	3¿“}}qqq?ç}}qĞ}}?}ĞĞ}}€}qĞİq}}Cqˆ|wªààs›Gx3Mçç}€€€€€€€€é>3%T ) k->¯¯¤_¯___¯>-¯¯>¾$ÉAy¤¤¯¯_¯___¤O(ukkNk‡kk‡ >¯¯¯_¯_¤_>IIÍ_¯ 8ËG-O>¯>k|k)Êk ¤¤¯__¯_¤¯>ÈskkkkÆs-O_¤>¤¯>-¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AAÀDÁÁÁÁÁÁDŠ¾Ñ¨ÙG	tÔWĞĞĞq/}ç}ç€Ğİ}}?}}}€}€}}}İq}}}İUÕ’{ààààdsª{çççç€€€€€€€>M5›.iêii->O_¯>O (.’¯¯O”AA£¾ ( O¯_¯>O-kk‡‡kêkrkpk«Ê >¯___>OäI>_>©‹è(>> ‡knkkNk- >¤_¯¯>-®k‡‡´k´p®k´iÍ( >O>¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AAÀDDÁÁÁÁDÀÀÉ.‹· º–qqqq˜}€?}€qİƒ}}?}}Ğq}}}}Ğq}}q•>Èæ®®®‚2àª Îçççç€çççç€€×¤*	‹†¾HAä¾¾äD---(Y.†í ¯¯>¡¾¾É£i ”Êk|--(äoœiNÍiiÌLi)iiiiii(----zzêfO_>Of8ÜË8f«”ii)êiLio”---’i¸i”i”i‡iiÌ¾”¾É$(ã¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AAÀÀDD:DÀAä¾z.G ^M½ÅWÅ•ç}€çC½€}}€İ=C+–““–q•CqqM>-bæææ:J®®ª¤Mçç€çç?}}€€}CÎ>›¨AÍÀAÉ£™¾A™Ñ…Y..ÑÑ ¯¯>¾¾”A¾”iêiiêikkiiiÍiiLkioii‡iioiiiiêiÌz$Ñ>_> ÙfÜÙä êii«iiÍLiÌoiÌkiÉ¢ŒÌÍiÉ¾¾£¾¾£¾H¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾Ñ¾¾AAAAA¾¾ADOOOÕhˆOéq}ÔU`˜ƒƒ˜ågååg¿ºîé<^>_-êÒ‚:JÃJJ(çççç=ßOO>O’3›1DDJDÀA¾[ÑíÑí¯_O”¾£¾Hiiiiiiiiiiiiiiii¾¡ÑäÑO_>.†..1iiiiiiiiiiiiiiii¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾Ñ..ÑÑ¾¾¾AJ-    Oq}Ğ–UîEİİ}=;½ºÎîqqÔg¿^      ui¸É¾AÁÃ-mç€ççMÃÃJÁÃÁ	G.ÁÁFJDAAÑÑÑ$$I >¯O¾¾ÉHÂiiiiiiiiiiiiiiii¾Â'Ñ0ÑO¯>.¥íÑziiiiiiiiiiiiiii¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾.ÙÙ..ÑÑÑÑÑÑÑÚT·‹‹%5q€}–qqå}}qqëq•––Cq.…8‹G›Z··‹Ã’@çç€çÕ ÃÁ«Ç{x‹Ù$JÃÃÃJŠ ÑÑ¾¾L¾H¾É¯_>$B¾L¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾Â¾$ÑÑ¨O__zÑšz¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AAAAAAAAAAAAAAAA¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾Ñ...ÑÑÑÑÑÑÑÑ69››Q™ïTq€qqqqqç}}€qq<qqqåOJFF‰: Ùw	§		·›Á(ØÅççç]>äÀdÇ{{{¨JÁÁFJ:‚‰´   AAA¾L¾H¾¾->>É¾¾B¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾H¾¾ÑÑ¨ >>†¾$¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AAAAAAAAAAAAAAAA¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾Ú.ÃÃÒaJOg€qqqq}çC/q•qqĞqO8Ù¨ ´´i.¨.ÑAÀÁÀÙˆÅmçm<›s{{ªS¾ÀDDF:ŠakuukiÀDŠAAA$A¾’-|¾¾L¢¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾A¾$$0í.«-’f¾AÉÉ¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AAAAAAAAAAAAAAAA¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AAAAAA¾¾¾¾AAAAA‰Ú9…QÃJæÚÃOë€}qqÔ€q}q&qå<qqqO›G….®a´¾AFJJDf%^×]éM.kÇ«‡DÁ¡£‚‰a´nvvvu´‰ŠÁÀAAAÉA¾¾$H¾¾¾£z¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AA$.†ÙÙ.¥Ñ¡AŠ‚A¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AAAAAAAAAAAAAAAA¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AÀDDDÀÀAAAAAAAAÀA0›	‹ÁÃÒa™O/€}€}qgå+€€€}Cqqqq/q–ÔO.™AÀ:ÚaÑÑ¸‚Ò ï-hMOËÃŠiË‹ÃÃÀÑikx„„xuaÚŠFDAAA$ÀAA¾¾¾¡¡B¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾ÉA¾ÑY
++Ü..Ñz”AAAA¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AÀDDDÀÀAAAAAAAAÀ¾†›§GF‚Ò:1OîC–qÅÎ`MWCÅ½ååqqĞq–ODJDÀJ‰Ì'.Ñ"aì®su. ¯OÀÃJÃJ¡8ÙFJÉÑÑí†#v©vnaÚFFÀHAÀŠAÉA¾ÂÉ¾$¾¢š¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾ŠA$$ÑÑ..1Ñ¾BA‚ŠA¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AAAAAAAAAAAAAAA¾Ñ..ÑAA¾ã>OO>OOOOO>éUqqĞĞİºO!ADAAÀ$¾iiakä1¾JÁÁA¾ÑAÀ¾i     iAAA¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AA¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾”¾¾£”¾.8›1ÀÃ$	ÈÕM•€+ÖMO!¾™¾¾¾H¾¾aa¾¾Â¾|¾¾L¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾ãÍ¾¾L¾¾..AÀDQ(^½q€}}}UO!¾!¾¾¾B¾¾aa¾£¾¾¾B¾¡¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾L”H¾¾ÍLo‚ÀFQ*^Åq}}€İO!¾!¾¾¾¾¾¾aa¾£L$¾LLB¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾Â¾¾¾¾¾¡i‚ŠÁT(<Åq}}€İOD¾!¾¾¾¾¾¾aaÂ¾H$B¾H¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾H¾Â¾¾Â$a‚ŠÃ›(^½•+}}€UA¾!¾¾¾¾¾¾aaÍ¾¾¾£¾$¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾É¡H¾¾aÚ‚‰J›,ÕMM½½=ÖMA¾!¾™¾B¾¾aaÉ¾B¾¡¾H$¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾ÍÂ¾¾L¾¾Éi‰Š8-~O^ºº¿²A¾!¾™¾Â¾¾aa¾H¾¾¾Â¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AA.‹--P’’µµPÙA¾¾¾¾¾¾¾¾aa¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾Ñ¾¾Ñ.Ù‹T		w›‹A¾¾¾¾¾¾¾¾aa¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾ÑÑaaÚAA¾¾¾¾¾¾¾¾aa¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾iÚ2ææ®®æææAA¾¾¾¾¾¾¾¾aa¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾AA¾iiiÚÚ‚ÒAA¾¾¾¾¾¾¾¾aa¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾ÚÚaaii‚‚JŠŠŠÚ¾A¾¾¾¾¾¾¾¾aa¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾ÒÒR´ ¾DÁÁDÀAÑÑA¾¾¾¾¾¾¾¾aa¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾aÒæÒR´ ¾DÁÁDÀ™88A¾¾¾¾¾¾¾¾aa¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾¾
+\ No newline at end of file
+diff -Naur u-boot-2016.05/tools/Makefile u-boot-2016.05-bpi-20160620/tools/Makefile
+--- u-boot-2016.05/tools/Makefile	2016-05-16 22:40:32.000000000 +0800
++++ u-boot-2016.05-bpi-20160620/tools/Makefile	2016-06-02 13:41:00.000000000 +0800
+@@ -198,7 +198,7 @@
+ 
+ # Generic logo
+ ifeq ($(LOGO_BMP),)
+-LOGO_BMP= $(srctree)/$(src)/logos/denx.bmp
++LOGO_BMP= $(srctree)/$(src)/logos/bananapi.bmp
+ 
+ # Use board logo and fallback to vendor
+ ifneq ($(wildcard $(srctree)/$(src)/logos/$(BOARD).bmp),)
